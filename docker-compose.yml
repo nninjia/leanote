@@ -1,27 +1,27 @@
-version: "2.1"
+version: "2"
 services:
-  leanote:
-    image: nykma/leanote:latest
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+ 
+  webapp:
+    links:
+      - mongo
+    image: leanote:1.0
+    #restart: always
+    ports:
+      - "127.0.0.1:9000:9000"
     volumes:
       - "./conf/app.conf:/go/src/github.com/leanote/leanote/conf/app.conf"
-      - './data/leanote/log:/var/log'
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mongo
+      - "/var/log:/var/log"
+      - "./files:/go/src/github.com/leanote/leanote/files"
+      - "./upload:/go/src/github.com/leanote/leanote/public/upload"
 
   mongo:
-    image: nykma/leanote-mongodb:latest
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile.mongodb
-    entrypoint: "/bin/bash"
-    command:
-      - "/root/start-db.sh"
-    healthcheck:
-      test: "echo 'db.stats().ok' | mongo 127.0.0.1:27017/leanote --quiet"
+    image: mongo
+    restart: always
+    ports:
+      - "127.0.0.1:27017:27017"
     volumes:
-      - "./data/mongodb:/data/db"
+      - "/opt/mongo/db:/data/db"
+    # environment:
+      # MONGO_INITDB_ROOT_USERNAME: root
+      # MONGO_INITDB_ROOT_PASSWORD: example
+ 
