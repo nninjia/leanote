@@ -11,8 +11,8 @@ services:
     volumes:
       - "./conf/app.conf:/go/src/github.com/leanote/leanote/conf/app.conf"
       - "/var/log:/var/log"
-      - "./files:/go/src/github.com/leanote/leanote/files"
-      - "./upload:/go/src/github.com/leanote/leanote/public/upload"
+      - "./mount/files:/go/src/github.com/leanote/leanote/files"
+      - "./mount/upload:/go/src/github.com/leanote/leanote/public/upload"
 
   mongo:
     image: mongo
@@ -21,7 +21,4 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - "/opt/mongo/db:/data/db"
-    # environment:
-      # MONGO_INITDB_ROOT_USERNAME: root
-      # MONGO_INITDB_ROOT_PASSWORD: example
  
