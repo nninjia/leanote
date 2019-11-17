@@ -4,8 +4,8 @@ services:
   webapp:
     links:
       - mongo
-    image: leanote:1.0
-    #restart: always
+    image: nnijia/leanote:1.0
+    restart: always
     ports:
       - "127.0.0.1:9000:9000"
     volumes:
