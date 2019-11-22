@@ -1,0 +1,35 @@
+---
+
+- name: bakup leanote
+  hosts: leanote
+  tasks:
+    - name: bakup leanote database
+      command: docker exec -it leanotedockerfile_mongo_1 mongodump -d leanote -o /mongo-bakup
+      register: result
+      ignore_errors: 'True'
+    - name: archive a file
+      archive:
+        path:
+        - ~/mongo-bakup
+        dest: /tmp/leanote_db.tar.gz
+        remote_src: yes
+      when: result is success
+    - name:  download
+      fetch:
+        src: /tmp/leanote_db.tar.gz
+        dest: ~/leanote-bakup/leanote_db.tar.gz
+        flat: yes
+      when: result is success
+
+    - name: bakup leanote image
+      register: result_files
+      archive:
+        path:
+        - ~/leanote-dockerfile/mount
+        dest: /tmp/leanote_files.tar.gz
+        remote_src: yes
+    - name: archive a file
+      fetch:
+        src: /tmp/leanote_files.tar.gz
+        dest: ~/leanote-bakup/leanote_files.tar.gz
+        flat: yes
